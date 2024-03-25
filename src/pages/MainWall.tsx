@@ -6,6 +6,7 @@ import Comment from '../components/Comment';
 
 
 export default function MainWall() {
+  
     return(
         <React.Fragment>
             <CssBaseline /> 

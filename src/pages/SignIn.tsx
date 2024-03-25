@@ -12,6 +12,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import env from "react-dotenv";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
+
 
 function Copyright(props: any) {
   return (
@@ -30,13 +35,41 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+ 
+  const navigate = useNavigate();
+  const apiBaseUrl = env.API_BASE_URL; 
+  
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    
+    // console.log('data: ', {
+    //   email: data.get('email'),
+    //   password: data.get('password')
+    // });
+
+    const loginPayLoad = {
       email: data.get('email'),
-      password: data.get('password'),
-    });
+      password: data.get('password')
+    }
+    
+    axios.post(`${apiBaseUrl}/auth/login`, loginPayLoad)
+    .then(resp => {
+      // localStorage.setItem('loginInfo', JSON.stringify(resp));
+      navigate('/main-wall');
+    })
+    .catch((reqError) =>{
+      
+      const {error, message} = reqError.response.data;
+      
+      
+      Swal.fire({
+        title: error,
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    })
   };
 
   return (
@@ -55,7 +88,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            My Social Network
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -78,10 +111,10 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -91,11 +124,11 @@ export default function SignIn() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="/sign-up" variant="body2">
                   {"Don't have an account? Sign Up"}

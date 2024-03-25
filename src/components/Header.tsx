@@ -76,7 +76,7 @@ export default function Header(props: HeaderProps) {
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup="true"
           onClick={handleToggle} size="small">
-            Sign up
+            User Options
         </Button>
         <Popper
           open={open}
